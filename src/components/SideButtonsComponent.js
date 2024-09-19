@@ -14,11 +14,39 @@ const SideButtonsComponent = () => {
     setTooltipVisible(false);
   };
 
+  // Custom smooth scroll function
+  const smoothScrollTo = (targetId) => {
+    const targetElement = document.getElementById(targetId);
+    if (!targetElement) return;
+
+    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000; // Duration in milliseconds
+    let startTime = null;
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1); // Ensure progress does not exceed 1
+
+      // Ease in-out function for smoother transition
+      const easeInOutQuad = (t) => {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+      };
+
+      window.scrollTo(0, startPosition + distance * easeInOutQuad(progress));
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
   const handleButtonClick = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+    smoothScrollTo(sectionId);
   };
 
   return (
@@ -42,7 +70,7 @@ const SideButtonsComponent = () => {
       <button
         className="side-button"
         onClick={() => handleButtonClick('skills-and-certifications')}
-        onMouseEnter={() => handleMouseEnter('skills-and-certifications')}
+        onMouseEnter={() => handleMouseEnter('Skills and Certifications')}
         onMouseLeave={handleMouseLeave}
       >
         <i className="fa fa-code"></i>
@@ -50,7 +78,7 @@ const SideButtonsComponent = () => {
       <button
         className="side-button"
         onClick={() => handleButtonClick('experience')}
-        onMouseEnter={() => handleMouseEnter('Education')}
+        onMouseEnter={() => handleMouseEnter('Experience')}
         onMouseLeave={handleMouseLeave}
       >
         <i className="fa fa-book"></i>
@@ -80,9 +108,7 @@ const SideButtonsComponent = () => {
         <i className="fab fa-twitter"></i>
       </button>
 
-      <div id="content">
-        {tooltipVisible && <div className="tooltip">{tooltip}</div>}
-      </div>
+      {tooltipVisible && <div className="tooltip">{tooltip}</div>}
     </div>
   );
 };
