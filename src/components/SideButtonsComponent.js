@@ -41,8 +41,8 @@ const SideButtonsComponent = () => {
       </button>
       <button
         className="side-button"
-        onClick={() => handleButtonClick('skills')}
-        onMouseEnter={() => handleMouseEnter('Skills')}
+        onClick={() => handleButtonClick('skills-and-certifications')}
+        onMouseEnter={() => handleMouseEnter('skills-and-certifications')}
         onMouseLeave={handleMouseLeave}
       >
         <i className="fa fa-code"></i>
